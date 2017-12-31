@@ -1,7 +1,7 @@
 /* KNOWN ISSUES:
     -> No collision handling. */
 
-function startGame(){
+function start(){
   mainArea.init();
   comp1 = new component(muts.randColor(),
                         muts.rand(10, 25),
@@ -119,5 +119,4 @@ var mainArea = {
     }
 }
 
-
-startGame();
+start();
