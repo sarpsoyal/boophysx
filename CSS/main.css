@@ -14,7 +14,7 @@ body {
   padding-top: 25px;
 }
 
-#gameCanvas {
+#mainCanvas {
   background-color: white;
   border-radius: 8px;
   padding: 0;
