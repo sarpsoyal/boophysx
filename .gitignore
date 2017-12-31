@@ -1,3 +1,4 @@
 archive
 util
 .DS_Store*
+.ftpconfig
