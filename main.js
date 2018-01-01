@@ -1,5 +1,7 @@
 function start(){
+  //init canvas
   mainArea.init();
+  //init random components
   comp1 = new component(muts.randColor(),
                         muts.rand(10, 25),
                         muts.rand(10, 25),
@@ -100,7 +102,7 @@ function start(){
                         0,
                         0,
                         true);
-
+  //init ground
   floor = new component('black', mainArea.canvas.width, 5, 0, mainArea.canvas.height-5, 0, 0, 0, 0, false);
 }
 
@@ -138,7 +140,7 @@ function component(color, width, height, x, y, velX, velY, accX, accY, grav) {
              Math.min(this.y + this.accY + this.velY, this.y + this.accY + this.velY + this.height) <= Math.max(other.y, other.y + other.height)
     }
 
-    //check for a collision in next frame
+    //checks for a collision in next frame
     this.collides = function(other) {
       return Math.max(this.x, this.x + this.width) >= Math.min(other.x, other.x + other.width) &&
              Math.min(this.x, this.x + this.width) <= Math.max(other.x, other.x + other.width) &&
@@ -146,7 +148,7 @@ function component(color, width, height, x, y, velX, velY, accX, accY, grav) {
              Math.min(this.y, this.y + this.height) <= Math.max(other.y, other.y + other.height)
     }
     this.newPos = function() { //calc future position
-      //Handle collision
+      //handle future collisions
       for (obj in components){
         if (components[obj] != this && this.willCollide(components[obj])){
           this.velX = 0;
@@ -156,7 +158,7 @@ function component(color, width, height, x, y, velX, velY, accX, accY, grav) {
         }
       }
       //handle velocity&acceleration
-      if (this.grav && !this.collides(floor)){
+      if (this.grav){
         this.accY += 0.01; //ITS GRAVITY BOI
       }
       this.velX += this.accX;
