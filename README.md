@@ -35,7 +35,7 @@ Add your first component!
 ```javascript
 component = new component('red', 30, 30, 1, 300, 300, 0, 0, 0, true, false);
 ```
-## Authors
+# Authors
 * Sarp Soyal
-## License
+# License
 This project is licensed under the MIT License
