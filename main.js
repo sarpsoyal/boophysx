@@ -1,40 +1,56 @@
-//todo: add willCollide() functionality to detect the axis of the collision
+//Still missing a normal force
 
 function start(){
   //init canvas
   mainArea.init('mainCanvas');
 
-  //init components
-  comp1 = new component(muts.randRgb(),
-                        30, //width
-                        30, //height
-                        10, //density
-                        20, //x position
-                        250, //y position
-                        8,  //X velocity
-                        -7,  //Y velocity
-                        true, //is effected by gravity
-                        false); //is static
+  //testing options
+  randomTesting = false;
+  UNIEL = false; //sets global unelasticity
 
-  comp1 = new component(muts.randRgb(),
-                        30, //width
-                        30, //height
-                        5, //density
-                        350, //x position
-                        250, //y position
-                        -8,  //X velocity
-                        -7,  //Y velocity
-                        true, //is effected by gravity
-                        false); //is static
+  if (randomTesting){
+    for (var i = 0; i < 10; i++){
+      random = [];
+      random.push(i);
+      random[i] = new component(muts.randRgb(), muts.rand(10,20), muts.rand(10,20), muts.rand(1,10), muts.rand(50,350), muts.rand(50,350), muts.rand(-5, 5), muts.rand(-5, 5), UNIEL, true, false);
+    }
+  }
+  else {
+    //standart collision
+    comp1 = new component(muts.randRgb(),
+                          30, //width
+                          30, //height
+                          10, //density
+                          200, //x position
+                          50, //y position
+                          5,  //X velocity
+                          0,  //Y velocity
+                          0, //unel
+                          true, //is effected by gravity
+                          false); //is static
+
+    comp1 = new component(muts.randRgb(),
+                          30, //width
+                          30, //height
+                          10, //density
+                          500, //x position
+                          50, //y position
+                          -4,  //X velocity
+                          0,  //Y velocity
+                          0, //unel
+                          true, //is effected by gravity
+                          false); //is static
+  }
+
   //init ground
-  floor = new component('black', mainArea.canvas.width, 5, 1, 0, mainArea.canvas.height-5, 0, 0, false, true);
+  floor = new component('black', mainArea.canvas.width, 5, 1, 0, mainArea.canvas.height-5, 0, 0, 0, false, true);
 }
 
 //Component array
 components = [];
 
 //Component object constructor
-function component(color, width, height, density, x, y, velX, velY, grav, stc) {
+function component(color, width, height, density, x, y, velX, velY, unelas, grav, stc) {
     this.width = width;
     this.height = height;
     this.density = density;
@@ -45,6 +61,7 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
     this.velY = velY;
     this.accX = 0;
     this.accY = 0;
+    this.unelas = unelas;
     this.grav = grav;
     this.stc = stc;
     ctx = mainArea.ctx;
@@ -75,7 +92,7 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
              Math.min(this.y, this.y + this.height) <= Math.max(other.y, other.y + other.height)
     }
 
-    this.collision = function(other) {
+    this.collisionUnel = function(other) {
       //calculate momentum values for both objects
       localMomentumX = this.velX * this.mass;
       localMomentumY = this.velY * this.mass;
@@ -86,10 +103,42 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
       xVelBoth = totalXMomentum / (this.mass + other.mass);
       totalYMomentum = localMomentumY + remoteMomentumY;
       yVelBoth = totalYMomentum / (this.mass + other.mass);
+      //set new velocities
       this.velX = xVelBoth;
       this.velY = yVelBoth;
       other.velX = xVelBoth;
       other.velY = yVelBoth;
+    }
+
+    this.collisionEl = function(other) {
+      //fetch variables
+      localMass = this.mass;
+      remoteMass = other.mass;
+      localVelX = this.velX;
+      localVelY = this.velY;
+      remoteVelX = other.velX;
+      remoteVelY = other.velY;
+      if ((Math.sqrt(localVelX^2)==localVelX) || !(Math.sqrt(remoteVelX^2)==remoteVelX)){ //if one positive and one negative
+        //calculations for local object
+        finalLocalVelX = ((localMass - remoteMass)/(localMass + remoteMass))*localVelX + ((2*remoteMass)/(localMass + remoteMass))*remoteVelX;
+        finalLocalVelY = ((localMass - remoteMass)/(localMass + remoteMass))*localVelY + ((2*remoteMass)/(localMass + remoteMass))*remoteVelY;
+        //calculations for remote object
+        finalRemoteVelX = ((2*localMass)/(localMass + remoteMass))*localVelX - ((remoteMass - localMass)/(localMass + remoteMass))*remoteVelX;
+        finalRemoteVelY = ((2*localMass)/(localMass + remoteMass))*localVelY - ((remoteMass - localMass)/(localMass + remoteMass))*remoteVelY;
+      }
+      else {
+        //calculations for local object
+        finalLocalVelX = ((localMass - remoteMass)/(localMass + remoteMass))*localVelX + ((2*remoteMass)/(localMass + remoteMass))*remoteVelX;
+        finalLocalVelY = ((localMass - remoteMass)/(localMass + remoteMass))*localVelY + ((2*remoteMass)/(localMass + remoteMass))*remoteVelY;
+        //calculations for remote object
+        finalRemoteVelX = ((2*localMass)/(localMass + remoteMass))*localVelX + ((remoteMass - localMass)/(localMass + remoteMass))*remoteVelX;
+        finalRemoteVelY = ((2*localMass)/(localMass + remoteMass))*localVelY + ((remoteMass - localMass)/(localMass + remoteMass))*remoteVelY;
+      }
+      //set new velocities
+      this.velX = finalLocalVelX;
+      this.velY = finalLocalVelY;
+      other.velX = finalRemoteVelX;
+      other.velY = finalRemoteVelY;
     }
 
     //calc future position
@@ -102,11 +151,16 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
           this.velY = 0;
           this.accX = 0;
           this.accY = 0;
-          // this.stc = true;
         }
         //if a collision is taking place with nonstatic components
         if (components[obj] != this && this.collides(components[obj]) && !this.stc && !components[obj].stc){
-          this.collision(components[obj]);
+          //Check if at least one of the objects collide unelasticly
+          if (this.unelas || components[obj].unelas){
+            this.collisionUnel(components[obj]);
+          }
+          else {
+            this.collisionEl(components[obj]);
+          }
         }
       }
       //handle velocity&acceleration
@@ -122,7 +176,7 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
     //return distance to given component in the given dimension
     this.dBetween = function(dimension, other) {
       if (dimension == 'x'){
-        return Math.abs(other.x - this.x);
+        return Math.min(other.x, other.x + other.width) - Math.max(this.x, this.x + this.width);
       }
       else if (dimension == 'y'){
         return Math.abs(other.y - this.y);
@@ -134,8 +188,8 @@ function component(color, width, height, density, x, y, velX, velY, grav, stc) {
 var mainArea = {
     init : function(canvName) {
         this.canvas = document.getElementById(canvName);
-        this.canvas.width = 400;
-        this.canvas.height = 400;
+        this.canvas.width = 700;
+        this.canvas.height = 500;
         this.ctx = this.canvas.getContext("2d");
         //Every 20ms, update frame
         this.interval = setInterval(this.update, 20);
