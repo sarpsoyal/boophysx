@@ -138,10 +138,10 @@ function component(color, width, height, density, x, y, velX, velY, unelas, grav
 
 //game canvas object
 var mainArea = {
-    init : function(canvName) {
+    init : function(canvName, width, height) {
         this.canvas = document.getElementById(canvName);
-        this.canvas.width = 700;
-        this.canvas.height = 500;
+        this.canvas.width = width;
+        this.canvas.height = height;
         this.ctx = this.canvas.getContext("2d");
         //Every 20ms, update frame
         this.interval = setInterval(this.update, 20);
