@@ -1,51 +1,3 @@
-//Still missing a normal force
-
-function start(){
-  //init canvas
-  mainArea.init('mainCanvas');
-
-  //testing options
-  randomTesting = false;
-  UNIEL = false; //sets global unelasticity
-
-  if (randomTesting){
-    for (var i = 0; i < 10; i++){
-      random = [];
-      random.push(i);
-      random[i] = new component(muts.randRgb(), muts.rand(10,20), muts.rand(10,20), muts.rand(1,10), muts.rand(50,350), muts.rand(50,350), muts.rand(-5, 5), muts.rand(-5, 5), UNIEL, true, false);
-    }
-  }
-  else {
-    //standart collision
-    comp1 = new component(muts.randRgb(),
-                          30, //width
-                          30, //height
-                          10, //density
-                          200, //x position
-                          50, //y position
-                          5,  //X velocity
-                          0,  //Y velocity
-                          0, //unel
-                          true, //is effected by gravity
-                          false); //is static
-
-    comp1 = new component(muts.randRgb(),
-                          30, //width
-                          30, //height
-                          10, //density
-                          500, //x position
-                          50, //y position
-                          -4,  //X velocity
-                          0,  //Y velocity
-                          0, //unel
-                          true, //is effected by gravity
-                          false); //is static
-  }
-
-  //init ground
-  floor = new component('black', mainArea.canvas.width, 5, 1, 0, mainArea.canvas.height-5, 0, 0, 0, false, true);
-}
-
 //Component array
 components = [];
 
@@ -98,7 +50,7 @@ function component(color, width, height, density, x, y, velX, velY, unelas, grav
       localMomentumY = this.velY * this.mass;
       remoteMomentumX = other.velX * other.mass;
       remoteMomentumY = other.velY * other.mass;
-      //unelastic collision
+      //inelastic collision
       totalXMomentum = localMomentumX + remoteMomentumX;
       xVelBoth = totalXMomentum / (this.mass + other.mass);
       totalYMomentum = localMomentumY + remoteMomentumY;
@@ -154,7 +106,7 @@ function component(color, width, height, density, x, y, velX, velY, unelas, grav
         }
         //if a collision is taking place with nonstatic components
         if (components[obj] != this && this.collides(components[obj]) && !this.stc && !components[obj].stc){
-          //Check if at least one of the objects collide unelasticly
+          //Check if at least one of the objects collide inelasticly
           if (this.unelas || components[obj].unelas){
             this.collisionUnel(components[obj]);
           }
@@ -206,5 +158,3 @@ var mainArea = {
       }
     }
 }
-
-start();
