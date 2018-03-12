@@ -21,7 +21,7 @@ component = new component('black', //Component color
                           true,    //This booleon controls wheter the component is being effected by the global gravity
                           false);  //This boolean makes the component static (Useful for creating a ground)
 ```
-## Usage
+# Usage
 ### Configure the canvas for boophysx usage
 Add a canvas to your html file
 ```html
