@@ -4,7 +4,7 @@ Boophysx is a very simple library for simulating collisions of square objects us
 # Getting Started
 ### Installing 
 ```html
-<script src="https://raw.github.com/sarpsoyal/boophysx/master/main.js"></script>
+<script src="https://cdn.rawgit.com/sarpsoyal/boophysx/master/main.js"></script>
 ```
 ## Component Structure
 A boophysx component takes eleven arguments that defines its behaviour
