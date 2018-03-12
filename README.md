@@ -4,10 +4,10 @@ Boophysx is a very simple library for simulating collisions of square objects us
 # Getting Started
 ### Installing 
 ```html
-<script src="https://raw.github.com/sarpsoyal/boophysx/master/main.js"></script>
+<script src="https://cdn.rawgit.com/sarpsoyal/boophysx/master/main.js"></script>
 ```
 ## Component Structure
-A boophysx component takes eleven arguments that defines its behaviour
+A boophysx component takes eleven arguments that define its behaviour
 ```javascript
 component = new component('black', //Component color
                           30,      //Component width
@@ -29,11 +29,11 @@ Add a canvas to your html file
 ```
 Initialize your canvas for boophysx use with mainArea.init() command.
 ```javascript
-mainArea.init('mainCanvas');
+mainArea.init('mainCanvas', 800, 600); //canvas name, canvas width, canvas height
 ```
 Add your first component!
 ```javascript
-ground = new component('black', mainArea.canvas.width, 5, 1, 0, mainArea.canvas.height-5, 0, 0, 0, false, true);
+component = new component('red', 30, 30, 1, 300, 300, 0, 0, 0, true, false);
 ```
 ## Authors
 * Sarp Soyal
