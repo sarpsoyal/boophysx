@@ -30,9 +30,10 @@ component = new component('black', //Component color
 ```javascript
 mainArea.init('mainCanvas', 800, 600); //canvas name, canvas width, canvas height
 ```
-### Add your first component
+### Add your components
 ```javascript
-component = new component('red', 30, 30, 1, 300, 300, 0, 0, 0, true, false);
+cmp1 = new component('red', 30, 30, 1, 300, 300, 5, 0, 0, true, false);
+cmp2 = new component('blue', 30, 30, 3, 600, 300, -2, 0, 0, true, false);
 ```
 # Authors
 * Sarp Soyal
